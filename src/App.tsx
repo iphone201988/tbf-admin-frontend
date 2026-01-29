@@ -16,11 +16,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "./features/auth/authSlice";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import type { RootState } from "./store/store";
+import PollQuestionsPage from "./pages/PollQuestionsPage";
 
 const routeMap: Record<SidebarItemKey, string> = {
   dashboard: "/admin/dashboard",
   users: "/admin/users",
   poll: "/admin/poll",
+  pollQuestions: "/admin/poll-questions",
   notifications: "/admin/notifications",
   settings: "/admin/settings",
 };
@@ -57,6 +59,7 @@ function App() {
         <Route path="/admin/dashboard" element={withNav(DashboardPage)()} />
         <Route path="/admin/users" element={withNav(UsersPage)()} />
         <Route path="/admin/poll" element={withNav(PollPage)()} />
+        <Route path="/admin/poll-questions" element={withNav(PollQuestionsPage)()} />
         <Route path="/admin/notifications" element={withNav(NotificationPage)()} />
         <Route
           path="/admin/settings"

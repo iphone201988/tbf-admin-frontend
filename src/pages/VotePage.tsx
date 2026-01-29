@@ -215,14 +215,7 @@ const VotePage: React.FC = () => {
                 <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 12 }}>
                   {poll.options.map((opt) => {
                     const isSelected = selected === opt._id;
-                    const hasCrown = topOptionId === opt._id;
-                    // progress %: enforce min 8% when votes exist, and handle zero votes
-                    const pct =
-                      maxVotes > 0
-                        ? Math.max(8, Math.round((opt.voteCount / maxVotes) * 100))
-                        : 0;
-                    // darker overlay if selected
-                    const overlay = isSelected ? "rgba(0, 225, 255, 0.42)" : "rgba(0, 225, 255, 0.28)";
+
                     return (
                       <div
                         key={opt._id}
@@ -240,23 +233,8 @@ const VotePage: React.FC = () => {
                           position: "relative",
                         }}
                       >
-                        {/* highlight bar based on votes */}
-                        {pct > 0 && (
-                          <span
-                            style={{
-                              position: "absolute",
-                              left: 0,
-                              top: 0,
-                              height: "100%",
-                              width: `${pct}%`,
-                              background: overlay,
-                              borderRadius: 12,
-                              pointerEvents: "none",
-                            }}
-                          />
-                        )}
                         <span style={{ width: 48, textAlign: "center", fontSize: 20, color: "#2b2b2b", zIndex: 1 }}>
-                          {hasCrown ? "👑" : ""}
+                          {/* Crown removed */}
                         </span>
                         <span
                           style={{
@@ -292,7 +270,7 @@ const VotePage: React.FC = () => {
                     fontWeight: 600,
                     background: "linear-gradient(90deg, #00e1ff, #00b7ff)",
                     color: "white",
-                  cursor: voting || !selected ? "not-allowed" : "pointer",
+                    cursor: voting || !selected ? "not-allowed" : "pointer",
                     marginBottom: 16,
                   }}
                   onClick={handleVote}

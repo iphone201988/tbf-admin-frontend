@@ -1,6 +1,6 @@
 import React from "react";
 
-export type SidebarItemKey = "dashboard" | "users" | "poll" | "notifications" | "settings";
+export type SidebarItemKey = "dashboard" | "users" | "poll" | "pollQuestions" | "notifications" | "settings";
 
 export interface SidebarProps {
   active?: SidebarItemKey;
@@ -11,7 +11,8 @@ export interface SidebarProps {
 const items: Array<{ key: SidebarItemKey; label: string; icon: string; href?: string }> = [
   { key: "dashboard", label: "Dashboard", icon: "/assets/dashboard.svg" },
   { key: "users", label: "Users", icon: "/assets/users_icon.svg" },
-  { key: "poll", label: "Poll", icon: "/assets/poll-icon.svg" },
+  { key: "poll", label: "Polls", icon: "/assets/poll-icon.svg" },
+  { key: "pollQuestions", label: "All Poll Questions", icon: "/assets/poll-icon.svg" },
   { key: "notifications", label: "Notifications", icon: "/assets/notification_bell.svg" },
   { key: "settings", label: "Settings", icon: "/assets/settings.svg" },
 ];

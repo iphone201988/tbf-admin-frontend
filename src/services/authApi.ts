@@ -63,6 +63,7 @@ export interface Poll {
   createdAt: string;
   pollDuration: string;
   options: { _id: string; optionText: string; voteCount: number }[];
+  shareAble?: string | null;
 }
 
 export interface GetUsersResponse {
@@ -117,6 +118,38 @@ export interface DeletePollResponse {
   success: boolean;
 }
 
+export interface CreatePollRequest {
+  pollName: string;
+  pollDuration: string; // ISO date string
+  options: { optionText: string }[];
+}
+
+export interface CreatePollResponse {
+  data: {
+    poll: Poll;
+  };
+  message: string;
+  success: boolean;
+}
+
+export interface CreatePollQuestionRequest {
+  question: string;
+  endTime: string; // ISO date string
+}
+
+export interface CreatePollQuestionResponse {
+  data: {
+    pollQuestion: {
+      _id: string;
+      question: string;
+      endTime: string;
+      createdAt: string;
+    };
+  };
+  message: string;
+  success: boolean;
+}
+
 export interface NotificationItem {
   _id: string;
   title: string;
@@ -124,9 +157,9 @@ export interface NotificationItem {
   type: string;
   createdAt: string;
   voter: { id: string | null; name: string; deviceType?: string } | null;
-   voterCity: string | null;
-   voterCountry: string | null;
-   voterDeviceName: string | null;
+  voterCity: string | null;
+  voterCountry: string | null;
+  voterDeviceName: string | null;
   poll: { id: string | null; name: string; createdByName: string };
   locationMessage: string | null;
 }
@@ -155,7 +188,7 @@ export const authApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ["Users", "Polls", "Notifications"],
+  tagTypes: ["Users", "Polls", "Notifications", "PollQuestions"],
   endpoints: (builder) => ({
     adminLogin: builder.mutation<AdminLoginResponse, AdminLoginRequest>({
       query: (body) => ({
@@ -218,6 +251,33 @@ export const authApi = createApi({
       }),
       invalidatesTags: ["Polls"],
     }),
+    createPoll: builder.mutation<CreatePollResponse, CreatePollRequest>({
+      query: (body) => ({
+        url: "/poll",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Polls"],
+    }),
+    createPollQuestion: builder.mutation<CreatePollQuestionResponse, CreatePollQuestionRequest>({
+      query: (body) => ({
+        url: "/admin/poll-questions",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["PollQuestions"],
+    }),
+    deletePollQuestion: builder.mutation<any, string>({
+      query: (questionId) => ({
+        url: `/admin/poll-questions/${questionId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["PollQuestions"],
+    }),
+    getPollQuestions: builder.query<any, { page?: number; limit?: number }>({
+      query: ({ page = 1, limit = 10 }) => `/poll/questions?page=${page}&limit=${limit}`,
+      providesTags: ["PollQuestions"],
+    }),
     getNotifications: builder.query<
       GetNotificationsResponse,
       { page?: number; limit?: number; search?: string; type?: string }
@@ -245,6 +305,9 @@ export const {
   useGetPollsQuery,
   useGetPollByIdAdminQuery,
   useDeletePollMutation,
+  useCreatePollMutation,
+  useCreatePollQuestionMutation,
+  useDeletePollQuestionMutation,
+  useGetPollQuestionsQuery,
   useGetNotificationsQuery,
 } = authApi;
-
