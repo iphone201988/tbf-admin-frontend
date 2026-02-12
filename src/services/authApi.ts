@@ -1,6 +1,34 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import {
+  createApi,
+  fetchBaseQuery,
+  type BaseQueryFn,
+  type FetchArgs,
+  type FetchBaseQueryError,
+} from "@reduxjs/toolkit/query/react";
+import { logout } from "../features/auth/authSlice";
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:8002/api/v1";
+
+const baseQuery = fetchBaseQuery({
+  baseUrl,
+  prepareHeaders: (headers, { getState }) => {
+    const token = (getState() as { auth?: { token?: string | null } })?.auth?.token;
+    if (token) headers.set("authorization", `Bearer ${token}`);
+    return headers;
+  },
+});
+
+const baseQueryWithLogout: BaseQueryFn<
+  string | FetchArgs,
+  unknown,
+  FetchBaseQueryError
+> = async (args, api, extraOptions) => {
+  let result = await baseQuery(args, api, extraOptions);
+  if (result.error && result.error.status === 401) {
+    api.dispatch(logout());
+  }
+  return result;
+};
 
 export interface AdminLoginResponse {
   data: {
@@ -180,14 +208,7 @@ export interface GetNotificationsResponse {
 
 export const authApi = createApi({
   reducerPath: "authApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl,
-    prepareHeaders: (headers, { getState }) => {
-      const token = (getState() as { auth?: { token?: string | null } })?.auth?.token;
-      if (token) headers.set("authorization", `Bearer ${token}`);
-      return headers;
-    },
-  }),
+  baseQuery: baseQueryWithLogout,
   tagTypes: ["Users", "Polls", "Notifications", "PollQuestions"],
   endpoints: (builder) => ({
     adminLogin: builder.mutation<AdminLoginResponse, AdminLoginRequest>({

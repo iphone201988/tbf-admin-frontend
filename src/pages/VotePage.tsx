@@ -53,6 +53,9 @@ const VotePage: React.FC = () => {
     return `Ends in ${hrs}h ${mins}min`;
   }, [poll?.pollDuration]);
 
+  // Generate a random number between 2000 and 5000 for social proof
+  const randomVoteCount = useMemo(() => Math.floor(Math.random() * (5000 - 2000 + 1)) + 2000, []);
+
   // Initialize selection from backend myVote
   useEffect(() => {
     if (myVote) setSelected(myVote);
@@ -313,7 +316,7 @@ const VotePage: React.FC = () => {
                   <div>Stay tuned for the results once the poll ends 👀</div>
                 </div>
                 <div style={{ marginTop: 12, fontSize: 13, color: "#1E1E1E" }}>
-                  ↕ {totalVotes} people just tapped the button ↕
+                  🔥 {randomVoteCount} people just tapped the button 🔥
                 </div>
               </div>
             )}
@@ -429,7 +432,7 @@ const VotePage: React.FC = () => {
             )}
 
             <button
-              className="create-btn"
+              className="create-btn beating-btn"
               style={{
                 width: "100%",
                 padding: 16,
@@ -443,12 +446,14 @@ const VotePage: React.FC = () => {
               }}
               onClick={() => (window.location.href = "/")}
             >
+              <span className="punch-left">🤜</span>
               Create your poll
+              <span className="punch-right">🤛</span>
             </button>
           </>
         )}
       </div>
-    </div>
+    </div >
   );
 };
 
