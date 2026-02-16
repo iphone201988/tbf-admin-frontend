@@ -56,6 +56,7 @@ export const PollQuestionsPage: React.FC<{
             alert("Poll Question Created Successfully");
         } catch (err: any) {
             console.error("Failed to create poll question", err);
+            alert(err?.data?.message);
         }
     };
 

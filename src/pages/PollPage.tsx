@@ -97,6 +97,7 @@ export const PollPage: React.FC<{ onNavigate?: (key: SidebarItemKey) => void; on
       onNavigate?.("pollQuestions");
     } catch (err: any) {
       console.error("Failed to create poll question", err);
+      alert(err?.data?.message);
       // Optionally show error message
     }
   };
